@@ -1,11 +1,9 @@
-chrome.runtime.onMessage.addListener((message) => {
-  const toggle = document.getElementById("toggle");
+chrome.runtime.connect({ name: "popup" });
 
-  if (message.sidebarDisplay === "") {
-    toggle.click();
-  }
+let eventListenerWasAdded = false;
 
-  toggle.addEventListener("click", () => {
+const addEventListener = (element, type) => {
+  element.addEventListener(type, () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },
@@ -19,6 +17,24 @@ chrome.runtime.onMessage.addListener((message) => {
       });
     });
   });
+  eventListenerWasAdded = true;
+};
+
+chrome.runtime.onMessage.addListener((message) => {
+  const toggle = document.getElementById("toggle");
+  if (message.toggleSidebarCommandPressed) {
+    toggle.click();
+    if (!eventListenerWasAdded) {
+      addEventListener(toggle, "click");
+    }
+  } else if (message.onPopupOpen) {
+    if (message.sidebarDisplayedOnPopupOpen) {
+      toggle.click();
+    }
+    if (!eventListenerWasAdded) {
+      addEventListener(toggle, "click");
+    }
+  }
 });
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -28,7 +44,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const sidebar = document.querySelector("#side");
       if (sidebar) {
         chrome.runtime.sendMessage({
-          sidebarDisplay: sidebar.parentElement.style.display,
+          onPopupOpen: true,
+          sidebarDisplayedOnPopupOpen:
+            sidebar.parentElement.style.display === "",
         });
       }
     },
