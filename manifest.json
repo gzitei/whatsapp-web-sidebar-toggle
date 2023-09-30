@@ -9,7 +9,7 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "permissions": ["activeTab", "commands", "scripting"],
+  "permissions": ["activeTab", "scripting"],
   "commands": {
     "toggle": {
       "suggested_key": {
