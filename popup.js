@@ -8,10 +8,15 @@ const addEventListener = (element, type) => {
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },
         function: () => {
-          const sidebar = document.querySelector("#side");
+          const sidebar = document.querySelector("#side")?.parentElement;
           if (sidebar) {
-            sidebar.parentElement.style.display =
-              sidebar.parentElement.style.display === "none" ? "" : "none";
+            sidebar.style.display =
+              sidebar.style.display === "none" ? "" : "none";
+            const header = sidebar.parentElement?.querySelector("header");
+            if (header) {
+              header.style.display =
+                header.style.display === "none" ? "" : "none";
+            }
           }
         },
       });
@@ -41,12 +46,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.scripting.executeScript({
     target: { tabId: tabs[0].id },
     function: () => {
-      const sidebar = document.querySelector("#side");
+      const sidebar = document.querySelector("#side")?.parentElement;
       if (sidebar) {
         chrome.runtime.sendMessage({
           onPopupOpen: true,
-          sidebarDisplayedOnPopupOpen:
-            sidebar.parentElement.style.display === "",
+          sidebarDisplayedOnPopupOpen: sidebar.style.display === "",
         });
       }
     },

@@ -16,7 +16,7 @@ chrome.commands.onCommand.addListener((command) => {
         chrome.scripting.executeScript({
           target: { tabId: tabs[0].id },
           function: () => {
-            const sidebar = document.querySelector("#side");
+            const sidebar = document.querySelector("#side")?.parentElement;
             if (sidebar) {
               chrome.runtime.sendMessage({
                 toggleSidebarCommandPressed: true,
@@ -28,10 +28,15 @@ chrome.commands.onCommand.addListener((command) => {
         chrome.scripting.executeScript({
           target: { tabId: tabs[0].id },
           function: () => {
-            const sidebar = document.querySelector("#side");
+            const sidebar = document.querySelector("#side")?.parentElement;
             if (sidebar) {
-              sidebar.parentElement.style.display =
-                sidebar.parentElement.style.display === "none" ? "" : "none";
+              sidebar.style.display =
+                sidebar.style.display === "none" ? "" : "none";
+              const header = sidebar.parentElement?.querySelector("header");
+              if (header) {
+                header.style.display =
+                  header.style.display === "none" ? "" : "none";
+              }
             }
           },
         });
