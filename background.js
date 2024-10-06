@@ -65,14 +65,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
         document.body.addEventListener("click", (e) => {
           let label = e.target?.dataset?.icon;
-          if (!label) {
-            return;
-          }
+          if (!label) return;
 
           let selected = label.split("-")[0];
-          if (!views.includes(selected)) {
-            return;
-          }
+          if (!views.includes(selected)) return;
 
           if (currentView == "") {
             if (selected == views[0]) {
