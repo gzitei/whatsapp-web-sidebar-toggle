@@ -6,6 +6,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     chrome.scripting.executeScript({
       target: { tabId: tabId },
       function: () => {
+        let currentView = "";
         const sidebar = document.querySelector("#side")?.parentElement;
         if (sidebar) sidebar.style.display = "none";
 
@@ -13,10 +14,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (secondarybar) secondarybar.style.display = "none";
 
         const main = document.querySelectorAll("[class='_aigv _aigz']")[1];
-        main.style.maxWidth = `calc(100vw - var(--navbar-width))`;
+        if (main) {
+          main.style.maxWidth = `calc(100vw - var(--navbar-width))`;
+        }
 
         const side = document.querySelector("[class='_aigv _aigw']");
-        side.style.minWidth = "380px";
+        if (side) {
+          side.style.minWidth = "380px";
+        }
 
         const toggleSideBar = () => {
           if (sidebar) {
@@ -50,25 +55,60 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           });
         }
 
+        const views = [
+          "chats",
+          "newsletter",
+          "community",
+          "status",
+          "settings",
+        ];
+
         document.body.addEventListener("click", (e) => {
-          let target = e.target;
-          let label = e.target.getAttribute("data-icon");
-          while (target) {
-            let role = target.role;
-            if (role) {
-              if (role == "listitem") {
-                toggleSideBar();
-              } else if (role == "button") {
-                if (label == "chats-filled") {
-                  toggleSideBar();
-                } else {
-                  toggleSecondarySideBar();
-                }
-                break;
-              }
-            }
-            target = target.parentElement;
+          let label = e.target?.dataset?.icon;
+          if (!label) {
+            return;
           }
+
+          let selected = label.split("-")[0];
+          if (!views.includes(selected)) {
+            return;
+          }
+
+          if (currentView == "") {
+            if (selected == views[0]) {
+              toggleSideBar();
+            } else {
+              toggleSecondarySideBar();
+            }
+            currentView = selected;
+            return;
+          }
+
+          if (selected == currentView) {
+            if (selected == views[0]) {
+              toggleSideBar();
+            } else {
+              toggleSecondarySideBar();
+            }
+            currentView = "";
+            return;
+          }
+
+          if (currentView == views[0] && selected != views[0]) {
+            toggleSideBar();
+            toggleSecondarySideBar();
+            currentView = selected;
+            return;
+          }
+
+          if (currentView != views[0] && selected == views[0]) {
+            toggleSecondarySideBar();
+            toggleSideBar();
+            currentView = selected;
+            return;
+          }
+
+          currentView = selected;
         });
       },
     });
