@@ -1,5 +1,15 @@
-Hide/show the WhatsApp Web sidebar.
+# Using Zap-Bar
 
-At times, you may find the need to share your screen to display a specific WhatsApp chat using the web version of the app. However, you might not want to expose all your other chats visible in the sidebar. To address this problem, this extension lets you toggle the visibility of the WhatsApp Web sidebar allowing you to focus only on the chat you wish to display, without having to worry about messages from other chats you don't want to share.
+In order to use this extension, you may clone this repository to your local machine using:
 
-Keyboard shortcut: Ctrl + Shift + S
+```bash
+git clone https://github.com/gzitei/whatsapp-web-sidebar-toggle.git
+```
+
+After cloning the repository, open Google Chrome and navigate to `chrome://extensions/`.
+
+In the extension management screen, you should enable developer mode on top right corner and click in `Load unpacked` on top left corner.
+
+After that, navigate to the cloned repository root directory and click in select.
+
+Now the extension should be working :D
