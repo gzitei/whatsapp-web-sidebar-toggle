@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Zap Bar",
   "description": "Fix WhatsApp web responsiveness",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "background": {
     "service_worker": "background.js"
   },
